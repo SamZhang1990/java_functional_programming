@@ -3,19 +3,40 @@ package com.sam.zhang;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class StreamDemo01 {
 
     public static void main(String[] args) {
         List<Author> authors = getAuthors();
-        System.out.println(authors);
+        //打印所有年龄小于18 的作者名称，并且去重
+        authors.stream()
+                .distinct()
+                .filter(new Predicate<Author>() {
+                    @Override
+                    public boolean test(Author author) {
+                        return author.getAge() < 18;
+                    }
+                })
+                .forEach(new Consumer<Author>() {
+                    @Override
+                    public void accept(Author author) {
+                        System.out.println(author.getName());
+                    }
+                });
+
+        authors.stream()
+                .distinct()
+                .filter(author -> author.getAge() < 18)
+                .forEach(author -> System.out.println(author.getName()));
     }
 
     private static List<Author> getAuthors() {
         Author author = new Author(1L,"张三",33,"一个人的春天", null);
-        Author author1 = new Author(2L, "李四", 34, "一个人的秋天", null);
+        Author author1 = new Author(2L, "李四", 16, "一个人的秋天", null);
         Author author2 = new Author(3L, "王五", 14, "一个人的冬天", null);
-        Author author3 = new Author(4L, "王五", 14, "一个人的冬天", null);
+        Author author3 = new Author(3L, "王五", 14, "一个人的冬天", null);
 
         List<Book> books1 = new ArrayList<>();
         List<Book> books2 = new ArrayList<>();
